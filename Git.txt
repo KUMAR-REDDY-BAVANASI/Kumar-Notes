@@ -2,17 +2,25 @@
 Version Control Management
 ==========================
 
-github 
-ssh (keygen like public key in github, private key in your pc)
-https (public repo username/password(appPassword))
+Two ways to authenticate from git(client) to github(server) 
+-----------------------------------------------------------
+ssh   == (ssh-keygen in your pc then copy and paste public key in github, private key in your pc)
+https == (Username/Password(appPassword))
 
-working dir (workplace)  git
+Git Lifecycle
+=============
+1. working area
+2. staging/indexing/buffer area
+3. local area(.git)
+4. remote/central area
 
-staging area/buffer area:  git add .
+working dir (workplace)               == git init
 
-local repo (.git)  : git commit -m "message"
+staging/buffer/index area             == git add .
 
-remote repo (github account) git push origin <branchName>
+local repo (.git)                     == git commit -m "message"
+
+remote repo (github account)          == git push origin <branchName>
 
 
 1. git clone (remote repo to our local repo)
@@ -179,12 +187,20 @@ changes are not reverted once rebase complete
 git rebase <branchName>   ==  integrate changes from one branch into another branch
 
 
+git tags
+========
+Tags similar to branches, but the difference is that tags are immutable.
+It means, tag is a branch, which nobody intends to modify. Once a tag is created for a particular
+commit, even if you create a new commit, it will not be updated.
+Usually, developers create tags for product releases.
+git tag                                           == it will list the tags in git from remote or local
+git tag -a "tagname" -m "message" <commit-id>     == it will create git tag for particular commit id
+git push --tags                                   == it will push git tags to remote repo
+git tag -d tagName                                == it will delete git tags
 
 
 
-
-
-
+Git stash is meant for developers
 
 git stash
 =========
@@ -205,21 +221,9 @@ git stash pop               == It apply the latest stash and then immediately dr
 git stash pop stash{1}      == It apply the particular stash and then immediately drop it from your stack.
 git stash clear             == Remove the stash entries.
 
-git tags
-========
-Tags similar to branches, but the difference is that tags are immutable.
-It means, tag is a branch, which nobody intends to modify. Once a tag is created for a particular
-commit, even if you create a new commit, it will not be updated.
-Usually, developers create tags for product releases.
-git tag                                           == it will list the tags in git from remote or local
-git tag -a "tagname" -m "message" <commit-id>     == it will create git tag for particular commit id
-git push --tags                                   == it will push git tags to remote repo
-git tag -d tagName                                == it will delete git tags
-
 .gitignore
 ==========
 it will ignore the files what you added in .gitignore file
-
 
 Renaming the branches in local
 ===============================
@@ -257,6 +261,8 @@ mv pre-commit.sample pre-commit
 mv commit-msg.sample commit-msg
 Update the pre-commit and commit-msg files
 then add and commit the files you will get pre-commit and post-commit message
+
+
 
 
 Branching Stratagies
