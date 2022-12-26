@@ -1,40 +1,175 @@
+Docker
+=======
+
+When we write any instructions in a file, It's nothing but Dockerfile 
+
+Static component  == Image (Template)
+
+Running component == Container
+
+
+DOCKERFILE INSTRUCTION LIST
+===========================
+FROM
+LABEL
+USER
+WORKDIR
+ENV
+ARG
+RUN
+CMD
+ENTRYPOINT
+ADD
+COPY
+EXPOSE
+SHELL
+
+
+FROM     	- The base image to use
+
+LABEL    	- To add extra information or metadata information to the image in the form of key-value pairs
+
+USER 	 	- Switches users (USER assigns user name and user group while running the image.)
+
+WORKDIR  	- Creates and Specifies the directory that commands are run from and for RUN, CMD, ENTRYPOINT, COPY, and ADD.
+
+ENV      	- ENV is a key-value pair. It sets the <KEY> , an environment variable, to the value <VALUE>. These variables 				  will be set during the image build also available after the container is launched.
+
+ARG      	- ARG defines the variables that are passed by the user to the builder at the build time. Remember: ARG 					  instruction is also used to set environment variables with key and value, but this variables will set only 				  during the image build not on the container
+
+RUN  	 	- Runs commands when building the docker image (is executed when images are being built)
+
+CMD 	 	- Runs commands when running the container (is executed when containers are started) and overwrite it
+
+ENTRYPOINT  - CMD and ENTRYPOINT both are executable one's to start/run a service/program and append it
+
+ADD         - Copies a file and directory from your host to Docker image, however can also fetch remote URLs, extract TAR/				  ZIP files, etc. It is used downloading remote resources, extracting TAR/ZIP files.
+
+COPY        - Copies a file or directory from your host to Docker image, It is used to simply copying files or directories 				  into the build context.
+
+EXPOSE      - EXPOSE sends information to Docker that the container listens on the specified network ports at runtime.
+
+SHELL       - It is used to set the default shell. SHELL ["/bin/bash", "-c", "echo hello"]
+
+
+.dockerignore
+-------------
+dockerignore in Dockerfile Instruction is used to prevent copy local modules and other unwanted file being copied into Docker Image.
+
+Create a .dockerignore in same directory and you can add unwanted modules/files into it.
+
+sudo nano .dockerignore
+
+*.yaml
+__pycache__/
+.git
+.aws
+.env
+
+
+Remember:
+----------
+Always use Alpine
+Using Dockerignore
+Use Multi Stage Build
+Keep Application Data outside the Container!
+Reduce Number of Layers created by DockerFile
+Build Custom Base Images
+Only Install Necessary Packages
+
+
+
+Port Numbers
+------------
+53   -- Route53
+22   -- SSH (linux machines to login)
+3389 -- RDP (windows machines to login)
+
+Load balancer Ports(access site by endusers)
+----------------------------------------
+80  -- http
+443 -- https
+
+Application port numbers
+------------------------
+80  	-- nginx/apache
+8080    -- tomcat/jenkins (java apps)
+5000    -- flask app
+8000    -- django app
+3306    -- mysql
+psql    -- 5432
+27017   -- mongodb
+3000    -- react js/node js
+4200    -- angular js
+
+
+docker port number ranges (4 digits, 5digits)
+
+k8s port numbers range (32000-32767)
+
+
+BASIC DOCKER COMMANDS
+======================
+docker build : The docker build command builds Docker images from a Dockerfile
+docker pull : Pull an image or a repository from a registry
+docker push: Push an image or a repository to a registry
+docker ps : returns an overview of all running containers.
+docker images : Shows the list of images
+docker system prune: Remove unused data
+docker kill : Kill one or more running containers
+docker restart: Restart one or more containers
+docker rm : Remove one or more containers
+docker rmi : Remove one or more images
+docker logs: Fetch the logs of a container
+docker run :Run a command in a new container
+docker login: Log in to a Docker registry
+
+
+
+
 Docker Commands
 --------------------
 Working on Images
 -------------------------
-1 To download a docker image 
-   docker pull image_name 
-
-2 To see the list of docker images 
-  docker image ls 
-  (or) 
-  docker images 
-
-3 To delete a docker image from docker host 
-  docker rmi image_name/image_id 
-
-4) To upload a docker image into docker hub 
-   docker push image_name 
-
-first of all you create docker dockerhub account and create repository
-docker tag local-image:tagname new-repo:tagname
-docker push new-repo:tagname
-
-5) To tag an image 
-docker tag   image_name   ipaddress_of_local_registry:5000/image_name 
-
-6) To build an image from a customised container 
-  docker   commit  container_name/container_id     new_image_name 
-
-7) To create an image from docker file 
-   docker build -t new_image_name 
-
-8) To search for a docker image 
+1) To search for a docker image 
    docker search image_name 
 
-9)  To delete all images that are not attached to containers 
+2) To download a docker image 
+   docker pull image_name 
+
+3) To see the list of docker images 
+   docker image ls 
+   (or) 
+   docker images 
+
+4) To create an image from docker file 
+   docker build . -t new_image_name -f Dockerfile
+
+5) To tag an image 
+   docker tag local-image:tagname new-repo:tagname
+
+6) To upload a docker image into docker hub (first of all tag the local image) 
+   You need to create dockerhub repo in your dockerhub account there you will get tag and push commands
+
+	You must login with docker login command
+	docker login
+	docker images
+	docker tag local-image:tagname new-repo:tagname
+	docker push new-repo:tagname
+	docker logout
+
+
+7) To build an image from a customised container 
+   docker commit container_name/container_id     new_image_name 
+
+8) To delete a docker image from docker host 
+   docker rmi image_name/image_id 
+
+9) To delete all images that are not attached to containers (containers,networks,images)
    docker system prune -a 
 
+10) To remove all images that are not attached to containers 
+   	docker rmi $(docker images -aq)
 
 
 ++++++++++++++++++++++++++++++++++++++++++++++
@@ -43,69 +178,95 @@ docker tag   image_name   ipaddress_of_local_registry:5000/image_name
 Working on containers
 -----------------------------
 
-10) To see the list of all running continers 
-   docker  container  ls 
+11) To see the list of all running continers 
+   docker container  ls 
 
-11) To see the list of running and stopped containers 
-    docker   ps -a 
+12) To see the list of running and stopped containers 
+    docker ps -a 
 
-12) To start a stopped container 
-    docker  start  container_name/container_id 
+13) To start a stopped container 
+    docker start container_name/container_id 
 
-13) To stop a running container 
-    docker stop   container_name/container_id 
+14) To stop a running container 
+    docker stop container_name/container_id 
 
-14) To restart a running container 
+15) To restart a running container 
    docker restart container_name/container_id 
          To restart after 10 seconds 
    docker restart  -t  10  container_name/container_id 
 
-15) To delete a stopped container 
-    docker  rm  container_name/container_id
+16) To delete a stopped container 
+    docker rm container_name/container_id
 
-16) To delete a running container 
-    docker  rm  -f  container_name/container id 
+17) To delete a running container 
+    docker rm -f container_name/container id 
 
-17) To stop all running containers 
+18) To stop all running containers 
     docker stop $(docker ps -aq) 
 
-18) To restart all containers 
+19) To restart all containers 
     docker restart $(docker ps -aq) 
 
-19) To remove all stopped containers 
+20) To remove all stopped containers 
     docker rm $(docker ps -aq) 
 
-20) To remove all contianers(running and stopped) 
+21) To remove all contianers(running and stopped) 
     docker rm -f  $(docker ps -aq) 
 
-21) To see the logs generated by a container 
-   docker logs container_name/container_id 
+22) To see the logs generated by a container 
+   	docker logs container_name/container_id 
 
-22) To see the ports used by a container 
-   docker port container_name/container_id 
+23) To see the ports used by a container running
+   	docker port container_name/container_id 
 
-23) To get detailed info about a container 
-   docker inspect container_name/container_id 
+24) To get detailed info about a container 
+   	docker inspect container_name/container_id 
 
-24) To go into the shell of a running contianer which is moved into background 
-   docker attach container_name/container id 
+25) To go into the shell of a running contianer which is moved into background 
+   	docker attach container_name/container id 
 
-25) To execute anycommand in a container 
+26) To execute anycommand in a container 
    docker exec -it container_name/container_id command
    Eg: To launch the bash shell in a contianer 
-   docker exec -it container_name/container_id  /bin/bash 
+   docker exec -it container_name/container_id  /bin/bash [or] bash
 
+27) To create a container from a docker image  ( imp )
+     docker run -d --name containername image_name   
 
-26) To create a container from a docker image  ( imp )
-     docker run image_name   
+28) To create a container and get into the shell
+    docker run -it container_name/container id bash
+
 
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 
+
+
+Docker Networks
+----------------
+Host
+Bridge (default)
+Overlay (multi nodes/ec2/docker engines)
+Macvlan
+None
+
+
+
 Run command options 
+-------------------
+Port mapping concept    -p hostport:containerport (DOCKERFILE PORT (APP))
+Volume mapping concept  -v hostpath:containerpath (DOCKERFILE WORKDIR)
+
+Syntax:
+--------
+docker run -it -d -v hostpath:containerpath -p hostport:containerport -e NAME=admin -e PASSWORD=root --name containername  <imagename>
+
+Example:
+--------
+docker run -it -d -v /home/devops/tomcat:/usr/local/tomcat -p 5476:8080 -e NAME=admin -e PASSWORD=root --name containername  <imagename>
+
 
 -it 	for opening an interactive terminal in a container 
-
 
 --name 	Used for giving a name to a container 
 
@@ -113,11 +274,8 @@ Run command options
 
 -e 	Used for passing environment varaibles to the container 
 
-
-
 -p 	Used for port mapping between port of container with the dockerhost port.
 
- 
 -P 	Used for automatic port mapping ie, it will map the internal port of the container 
                 with some port on host machine. 
                This host port will be some number greater than 30000 
@@ -127,6 +285,7 @@ Run command options
 --volume-from 	 Used for sharing volume between containers 
 
 --network 	Used to run the contianer on a specific network 
+
 --link 		Used for linking the container for creating a multi container architecture 
 
 --memory  	Used to specify the maximum amount of ram that the container can use 
@@ -140,6 +299,7 @@ Run command options
 To download tomcat image
 
 # docker pull tomcat
+
 # docker images		
 
 # docker pull ubuntu
@@ -151,7 +311,7 @@ I want to download jenkins
 
 
 TO create a container from an image
-# docker run --name   mytomcat  -p 7070:8080 tomcat
+# docker run --name  mytomcat -p 7070:8080 tomcat
 
 TO check the tomcat is running or not
 http://13.250.47.90:7070
@@ -161,9 +321,10 @@ http://13.250.47.90:7070
 Lets remove the container  ( Open another gitbash terminal)
 
 # docker stop  mytomcat
+
 # docker rm -f mytomcat
 
-# docker run --name   mytomcat  -p 7070:8080 -d tomcat
+# docker run --name mytomcat -p 7070:8080 -d tomcat
 ( The above command  runs tomcat in detached mode , so we get out # prompt back )
  
 # docker container ls
@@ -241,7 +402,7 @@ To start centos as container
 ++++++++++++++
 To start mysql  as container, open interactive terminal in it, create a sample table.
 
-# docker run  --name  mydb  -d  -e MYSQL_ROOT_PASSWORD=sunil  mysql:5
+# docker run  --name  mydb  -d  -e MYSQL_ROOT_PASSWORD=kumar  mysql:5
 
 # docker container ls
 
