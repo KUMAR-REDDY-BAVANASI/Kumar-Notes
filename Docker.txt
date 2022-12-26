@@ -4,9 +4,7 @@ Docker
 When we write any instructions in a file, It's nothing but Dockerfile 
 
 Static component  == Image (Template)
-
 Running component == Container
-
 
 DOCKERFILE INSTRUCTION LIST
 ===========================
@@ -67,6 +65,8 @@ __pycache__/
 .env
 
 
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
 Remember:
 ----------
 Always use Alpine
@@ -78,34 +78,7 @@ Build Custom Base Images
 Only Install Necessary Packages
 
 
-
-Port Numbers
-------------
-53   -- Route53
-22   -- SSH (linux machines to login)
-3389 -- RDP (windows machines to login)
-
-Load balancer Ports(access site by endusers)
-----------------------------------------
-80  -- http
-443 -- https
-
-Application port numbers
-------------------------
-80  	-- nginx/apache
-8080    -- tomcat/jenkins (java apps)
-5000    -- flask app
-8000    -- django app
-3306    -- mysql
-psql    -- 5432
-27017   -- mongodb
-3000    -- react js/node js
-4200    -- angular js
-
-
-docker port number ranges (4 digits, 5digits)
-
-k8s port numbers range (32000-32767)
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 BASIC DOCKER COMMANDS
@@ -125,12 +98,13 @@ docker run :Run a command in a new container
 docker login: Log in to a Docker registry
 
 
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 Docker Commands
---------------------
+---------------
 Working on Images
--------------------------
+-----------------
 1) To search for a docker image 
    docker search image_name 
 
@@ -157,7 +131,6 @@ Working on Images
 	docker tag local-image:tagname new-repo:tagname
 	docker push new-repo:tagname
 	docker logout
-
 
 7) To build an image from a customised container 
    docker commit container_name/container_id     new_image_name 
@@ -240,8 +213,6 @@ Working on containers
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
 
-
-
 Docker Networks
 ----------------
 Host
@@ -250,6 +221,8 @@ Overlay (multi nodes/ec2/docker engines)
 Macvlan
 None
 
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 Run command options 
@@ -291,7 +264,178 @@ docker run -it -d -v /home/devops/tomcat:/usr/local/tomcat -p 5476:8080 -e NAME=
 --memory  	Used to specify the maximum amount of ram that the container can use 
 
 
-++++++++++++++++++++++++++++++++++++++++++++++++++=
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Some Observations:
+------------------
+
+Dockerfile1
+-----------
+ARG VERSION=latest
+
+FROM ubuntu:$VERSION
+
+ARG VERSION
+ENV NAME APP_NAME
+ENV PASSWORD APP_PASSWORD
+
+WORKDIR /kumar
+COPY . /kumar
+ADD https://dlcdn.apache.org/maven/maven-3/3.8.6/source/apache-maven-3.8.6-src.tar.gz .
+ADD apache-maven-3.8.6-src.tar.gz .
+
+RUN echo $VERSION > image_version
+
+
+Build the image with build-arg flag
+------------------------------------
+docker build . -t arg --build-arg VERSION=18.04
+
+Run the image and check the version 
+-----------------------------------
+docker run -it arg:latest cat image_version
+
+Output:
+-------
+18.04
+
+Run the image with env vars and check it 
+-----------------------------------------
+docker run -e NAME=kumar -e PASSWORD=root -it arg:latest env
+
+Output:
+-------
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+HOSTNAME=e1c07d0bcf40
+TERM=xterm
+NAME=APP_NAME
+PASSWORD=APP_PASSWORD
+HOME=/root
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Dockerfile2
+-----------
+FROM ubuntu:latest
+
+CMD ["echo", "Hello BHARATH"]
+CMD ["echo", "Hello KUMAR"]
+CMD ["echo", "Hello REDDY"]
+
+
+Build the image 
+----------------
+docker build . -t cmd
+
+Run the image and check the output 
+-----------------------------------
+docker run  -it cmd:latest
+
+Output:
+------
+Hello REDDY
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Dockerfile3
+-----------
+FROM ubuntu:latest
+
+ENTRYPOINT ["echo", "Hello World"]
+# ENTRYPOINT ["sleep", "2"]
+
+Build the image 
+----------------
+docker build . -t ep
+
+Run the image and check the output 
+-----------------------------------
+docker run  -it ep:latest
+
+Output:
+-------
+Hello World
+
+Run the image and check the output it appended
+-----------------------------------------------
+docker run  -it ep:latest kumar
+
+Output:
+--------
+Hello World kumar
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Dockerfile4
+-----------
+FROM ubuntu:latest
+
+# When we will use both, At run time cmd as input to write and overwrite it
+CMD ["echo", "World"]
+ENTRYPOINT ["echo", "Hello"]
+
+Build the image 
+----------------
+docker build . -t cmdep
+
+Run the image and check the output 
+-----------------------------------
+docker run  -it cmdep:latest
+
+Output:
+-------
+Hello echo World
+
+Run the image and check the output 
+-----------------------------------
+docker run  -it cmdep:latest kumar
+
+Output:
+-------
+Hello kumar
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Port Numbers
+------------
+53   -- Route53
+22   -- SSH (linux machines to login)
+3389 -- RDP (windows machines to login)
+
+Load balancer Ports(access site by endusers)
+----------------------------------------
+80  -- http
+443 -- https
+
+Application port numbers
+------------------------
+80  	-- nginx/apache
+8080    -- tomcat/jenkins (java apps)
+5000    -- flask app
+8000    -- django app
+3306    -- mysql
+psql    -- 5432
+27017   -- mongodb
+3000    -- react js/node js
+4200    -- angular js
+
+
+docker port number ranges (4 digits, 5digits)
+
+k8s port numbers range (32000-32767)
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 
 # docker images   ( There are no images )
@@ -431,4 +575,4 @@ https://justinsomnia.org/2009/04/the-emp-and-dept-tables-for-mysql/
 # exit
 
 
-++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
