@@ -28,5 +28,3 @@ RUN echo $VERSION > image_version
 # When we use both at run time cmd as input to write and overwrite
 CMD ["echo", "World"]
 ENTRYPOINT ["echo", "Hello"]
-
-EXPOSE 80
