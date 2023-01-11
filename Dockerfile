@@ -13,8 +13,8 @@ ENV PASSWORD APP_PASSWORD
 WORKDIR /kumar
 
 COPY . /kumar
-ADD https://dlcdn.apache.org/maven/maven-3/3.8.6/source/apache-maven-3.8.6-src.tar.gz .
-ADD apache-maven-3.8.6-src.tar.gz .
+# ADD https://dlcdn.apache.org/maven/maven-3/3.8.6/source/apache-maven-3.8.6-src.tar.gz .
+# ADD apache-maven-3.8.6-src.tar.gz .
 
 RUN echo $VERSION > image_version
 
