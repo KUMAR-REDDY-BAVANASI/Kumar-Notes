@@ -67,8 +67,8 @@ __pycache__/
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Remember:
-----------
+Remember(DockerBestPractices):
+------------------------------
 Always use Alpine
 Using Dockerignore
 Use Multi Stage Build
