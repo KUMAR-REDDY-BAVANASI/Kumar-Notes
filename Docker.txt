@@ -7,7 +7,7 @@ Static component  == Image (Template)
 Running component == Container
 
 DOCKER FILE INSTRUCTION LIST
-===========================
+============================
 FROM
 LABEL
 USER
