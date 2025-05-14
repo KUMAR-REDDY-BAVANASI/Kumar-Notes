@@ -6,7 +6,7 @@ When we write any instructions in a file, It's nothing but Dockerfile
 Static component  == Image (Template)
 Running component == Container
 
-DOCKERFILE INSTRUCTION LIST
+DOCKER FILE INSTRUCTION LIST
 ===========================
 FROM
 LABEL
